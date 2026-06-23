@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolsillo — Panel de Misiones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+
+
+
+<style>
+  :root {
+    --bg-void:      #04080f;
+    --bg-deep:      #070d1a;
+    --bg-panel:     #0a1225cc;
+    --bg-card:      #0d1a2ecc;
+    --border-dim:   #1a2d50;
+    --border-glow:  #1e4a7a;
+    --accent-teal:  #3fffd2;
+    --accent-gold:  #c8a84b;
+    --accent-red:   #ff4d4d;
+    --text-primary: #d8eaf8;
+    --text-dim:     #5a7a9a;
+    --text-label:   #8aaac8;
+    --glow-teal:    0 0 8px #3fffd260, 0 0 20px #3fffd220;
+    --glow-gold:    0 0 8px #c8a84b60, 0 0 20px #c8a84b20;
+
+    --priority-high:   #ff6b35;
+    --priority-mid:    #c8a84b;
+    --priority-low:    #3fffd2;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  body {
+    background: var(--bg-void);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── CANVAS BG ── */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, #0e2a5020 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 80%, #0a1e3a18 0%, transparent 60%);
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(#1a3a6008 1px, transparent 1px),
+      linear-gradient(90deg, #1a3a6008 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .bg-glyph {
+    position: fixed;
+    width: 600px; height: 600px;
+    border: 1px solid #1a3a6015;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; z-index: 0;
+    animation: glyphSpin 60s linear infinite;
+  }
+  .bg-glyph::before {
+    content: '';
+    position: absolute; inset: 40px;
+    border: 1px solid #1a3a6012;
+    border-radius: 50%;
+  }
+  @keyframes glyphSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+  /* ── WRAPPER ── */
+  .app {
+    position: relative; z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 48px 0 32px;
+    position: relative;
+  }
+  .header-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--accent-teal);
+    text-shadow: var(--glow-teal);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .header-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(32px, 6vw, 60px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--text-primary);
+    line-height: 1;
+    text-shadow: 0 0 40px #3fffd230;
+  }
+  .header-title span {
+    color: var(--accent-teal);
+    text-shadow: var(--glow-teal);
+  }
+  .header-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    margin-top: 10px;
+  }
+  .header-divider {
+    width: 280px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-teal)60, transparent);
+    margin: 20px auto 0;
+  }
+
+  /* ── STATS BANNER ── */
+  .stats-bar {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 36px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-dim);
+    border-top: 1px solid var(--accent-teal)30;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .stats-bar::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-teal)80, transparent);
+  }
+  .stat-item {
+    flex: 1;
+    padding: 16px 20px;
+    text-align: center;
+    border-right: 1px solid var(--border-dim);
+    position: relative;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .stat-label svg { opacity: .6; }
+  .stat-value {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent-teal);
+    text-shadow: var(--glow-teal);
+    margin-top: 4px;
+  }
+  .stat-arrow {
+    color: var(--accent-teal);
+    font-size: 11px;
+    margin: 0 4px;
+  }
+
+  /* ── SECTION ── */
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-dim);
+    position: relative;
+  }
+  .section-header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; width: 80px; height: 1px;
+    background: var(--accent-teal);
+    box-shadow: var(--glow-teal);
+  }
+  .section-num {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--accent-teal);
+    text-shadow: var(--glow-teal);
+    letter-spacing: 2px;
+    border: 1px solid var(--accent-teal)50;
+    padding: 2px 8px;
+  }
+  .section-name {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+  }
+  .section-tag {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    border: 1px solid var(--border-dim);
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .section-block { margin-bottom: 44px; }
+
+  /* ── MISSION CARD ── */
+  .missions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+  }
+  .mission-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+    cursor: pointer;
+  }
+  .mission-card:hover {
+    border-color: var(--accent-teal)60;
+    box-shadow: 0 0 20px #3fffd210;
+  }
+  .mission-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, var(--accent-teal)80, transparent);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .mission-card:hover::before { opacity: 1; }
+
+  .mission-card-inner { padding: 16px 18px 18px; }
+
+  .mission-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .mission-id {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+  .priority-badge {
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border: 1px solid;
+  }
+  .priority-badge.high  { color: var(--priority-high); border-color: var(--priority-high)70; background: #ff6b3510; }
+  .priority-badge.mid   { color: var(--priority-mid);  border-color: var(--priority-mid)70;  background: #c8a84b10; }
+  .priority-badge.low   { color: var(--priority-low);  border-color: var(--priority-low)70;  background: #3fffd210; }
+
+  .mission-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .mission-desc {
+    font-size: 13px;
+    color: var(--text-label);
+    line-height: 1.6;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+
+  .mission-meta {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .meta-chip {
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 3px 9px;
+    border: 1px solid var(--border-glow);
+    color: var(--text-dim);
+    display: flex; align-items: center; gap: 5px;
+    background: #0d1a2e80;
+  }
+  .meta-chip.assignee {
+    color: var(--accent-teal);
+    border-color: var(--accent-teal)50;
+    background: #3fffd208;
+  }
+  .meta-chip.reward {
+    color: var(--accent-gold);
+    border-color: var(--accent-gold)50;
+    background: #c8a84b08;
+  }
+
+  .mission-steps {
+    list-style: none;
+    border-top: 1px solid var(--border-dim);
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+  .mission-steps li {
+    font-size: 12px;
+    color: var(--text-label);
+    padding: 5px 0;
+    display: flex; align-items: flex-start; gap: 8px;
+    border-bottom: 1px solid var(--border-dim)50;
+  }
+  .mission-steps li:last-child { border-bottom: none; }
+  .step-dot {
+    flex-shrink: 0;
+    width: 6px; height: 6px;
+    border: 1px solid var(--accent-teal)70;
+    margin-top: 5px;
+    position: relative;
+  }
+  .step-dot::after {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 2px; height: 2px;
+    background: var(--accent-teal);
+  }
+
+  /* ── OPORTUNIDADES TABLE ── */
+  .opps-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+  }
+  .opps-table thead tr {
+    background: #0d1a2e;
+    border-bottom: 1px solid var(--border-dim);
+  }
+  .opps-table th {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    border-right: 1px solid var(--border-dim);
+  }
+  .opps-table th:last-child { border-right: none; }
+  .opps-table td {
+    padding: 12px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-dim)60;
+    border-right: 1px solid var(--border-dim)40;
+  }
+  .opps-table td:last-child { border-right: none; }
+  .opps-table tr:last-child td { border-bottom: none; }
+  .opps-table tr:hover td { background: #3fffd205; }
+  .target-name { font-weight: 600; color: var(--text-primary); }
+  .prob-bar-wrap {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .prob-bar {
+    flex: 1; height: 4px; background: var(--border-dim);
+    position: relative;
+  }
+  .prob-bar-fill {
+    position: absolute; inset: 0 auto 0 0;
+    background: var(--accent-teal);
+    box-shadow: var(--glow-teal);
+  }
+  .prob-pct {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: var(--accent-teal);
+    text-shadow: var(--glow-teal);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* ── STRATEGY BANNER ── */
+  .strategy-banner {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-dim);
+    border-left: 3px solid var(--accent-teal);
+    padding: 20px 24px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .strategy-banner::before {
+    content: '"';
+    position: absolute; right: 20px; top: -10px;
+    font-family: 'Cinzel', serif;
+    font-size: 100px;
+    color: var(--accent-teal);
+    opacity: .05;
+    line-height: 1;
+  }
+  .strategy-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent-teal);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-shadow: var(--glow-teal);
+  }
+  .strategy-text {
+    font-size: 14px;
+    color: var(--text-label);
+    line-height: 1.7;
+    max-width: 760px;
+  }
+
+  /* ── ESCALATION TABLE ── */
+  .escalation-row {
+    display: flex; align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-dim)60;
+    gap: 12px;
+  }
+  .escalation-row:last-child { border-bottom: none; }
+  .esc-num {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--accent-teal);
+    text-shadow: var(--glow-teal);
+    min-width: 28px;
+  }
+  .esc-arrow {
+    color: var(--accent-teal);
+    font-size: 14px;
+    opacity: .6;
+  }
+  .esc-text {
+    font-size: 13px;
+    color: var(--text-label);
+  }
+
+  /* ── CONCLUSION ── */
+  .conclusion {
+    text-align: center;
+    padding: 40px 0 0;
+    border-top: 1px solid var(--border-dim);
+    margin-top: 20px;
+  }
+  .conclusion-title {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent-teal);
+    text-shadow: var(--glow-teal);
+    margin-bottom: 12px;
+  }
+  .conclusion-text {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    max-width: 660px;
+    margin: 0 auto;
+  }
+  .conclusion-divider {
+    width: 60px; height: 1px;
+    background: var(--accent-teal);
+    box-shadow: var(--glow-teal);
+    margin: 24px auto 0;
+  }
+
+  /* ── FULL-WIDTH CARD ── */
+  .card-full {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .stats-bar { flex-wrap: wrap; }
+    .stat-item { min-width: 50%; }
+    .missions-grid { grid-template-columns: 1fr; }
+    .opps-table th, .opps-table td { padding: 8px 10px; font-size: 12px; }
+  }
+
+  /* ── SCROLL ANIMATION ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp .5s ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: none; }
+  }
+  .fade-in:nth-child(1) { animation-delay: .05s; }
+  .fade-in:nth-child(2) { animation-delay: .12s; }
+  .fade-in:nth-child(3) { animation-delay: .19s; }
+  .fade-in:nth-child(4) { animation-delay: .26s; }
+  .fade-in:nth-child(5) { animation-delay: .33s; }
+  .fade-in:nth-child(6) { animation-delay: .40s; }
+</style>
+</head>
+<body>
+
+<div class="bg-canvas"></div>
+<div class="bg-grid"></div>
+<div class="bg-glyph"></div>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-eyebrow">▸ SISTEMA DE MISIONES ACTIVAS ◂</div>
+    <div class="header-title">BOLSILLO <span>STUDIO</span></div>
+    <div class="header-sub">Plan de Acción Comercial — Temporada I</div>
+    <div class="header-divider"></div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-label">
+        <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" stroke="#3fffd2" stroke-width="1" fill="none"/></svg>
+        LÍNEAS ACTIVAS
+      </div>
+      <div class="stat-value">05</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">
+        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 1L9 9H1Z" stroke="#3fffd2" stroke-width="1" fill="none"/></svg>
+        MISIONES TOTALES
+      </div>
+      <div class="stat-value">18</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">
+        <svg width="10" height="10" viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" stroke="#3fffd2" stroke-width="1" fill="none"/></svg>
+        PRIORIDAD ALTA
+      </div>
+      <div class="stat-value" style="color:var(--priority-high);text-shadow:0 0 8px #ff6b3560;">07</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">
+        <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 5h8M5 1v8" stroke="#c8a84b" stroke-width="1"/></svg>
+        OBJETIVO PRECIO
+      </div>
+      <div class="stat-value" style="color:var(--accent-gold);text-shadow:var(--glow-gold);">$60K</div>
+    </div>
+  </div>
+
+  <!-- THESIS -->
+  <div class="strategy-banner">
+    <div class="strategy-label">▸ Tesis Central</div>
+    <div class="strategy-text">
+      Transformar la capacidad ociosa del estudio en flujo de caja inmediato. Usar infraestructura disponible, relaciones existentes y oportunidades cercanas para generar ingresos en el corto plazo — mientras se construyen relaciones que permitan escalar a servicios de mayor valor.
+    </div>
+  </div>
+
+  <!-- ══ LÍNEA 1 ══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-num">L1</div>
+      <div class="section-name">REEL EXPRESS — CAJA INMEDIATA</div>
+      <div class="section-tag">Terreno</div>
+    </div>
+    <div class="missions-grid">
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-001</div>
+            <div class="priority-badge high">ALTA</div>
+          </div>
+          <div class="mission-title">Salida Sistemática a Terreno</div>
+          <div class="mission-desc">Recorrer negocios y comercios del sector para ofrecer Reel Express. Cobro por transferencia inmediata al cierre.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Equipo Comercial</span>
+            <span class="meta-chip reward">◈ Ingreso inmediato</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Definir ruta de negocios por zona/barrio</li>
+            <li><span class="step-dot"></span>Preparar propuesta express (1 hoja)</li>
+            <li><span class="step-dot"></span>Visitar mínimo 5 negocios por salida</li>
+            <li><span class="step-dot"></span>Cerrar con transferencia inmediata</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-002</div>
+            <div class="priority-badge high">ALTA</div>
+          </div>
+          <div class="mission-title">Reactivación de Clientes Antiguos</div>
+          <div class="mission-desc">Contactar clientes con relación previa para ofrecer versión simplificada del servicio. La confianza ya existe — aprovecharla.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Responsable CRM</span>
+            <span class="meta-chip reward">◈ Upselling futuro</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Listar clientes anteriores con buen historial</li>
+            <li><span class="step-dot"></span>Redactar mensaje personalizado de reactivación</li>
+            <li><span class="step-dot"></span>Ofrecer producto de entrada sin fricción</li>
+            <li><span class="step-dot"></span>Registrar respuesta y estado en CRM</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-003</div>
+            <div class="priority-badge mid">MEDIA</div>
+          </div>
+          <div class="mission-title">Diseño del Producto Reel Express</div>
+          <div class="mission-desc">Definir los paquetes: reel de ubicación, producto y experiencia de cliente. Acotados en tiempo de producción y entrega rápida.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Producción</span>
+            <span class="meta-chip reward">◈ Estandarización</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Crear ficha técnica de cada variante</li>
+            <li><span class="step-dot"></span>Definir tiempos máx. de grabación y edición</li>
+            <li><span class="step-dot"></span>Establecer precio fijo por tipo</li>
+            <li><span class="step-dot"></span>Crear checklist de entrega</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ LÍNEA 2 ══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-num">L2</div>
+      <div class="section-name">REDES CERCANAS Y REFERIDOS</div>
+      <div class="section-tag">Comunidad</div>
+    </div>
+    <div class="missions-grid">
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-004</div>
+            <div class="priority-badge high">ALTA</div>
+          </div>
+          <div class="mission-title">Close Friends Fotografía</div>
+          <div class="mission-desc">Posicionar la fotografía como experiencia exclusiva y cercana. Generar sensación de acceso privilegiado mediante comunidad privada en Instagram.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Community / RRSS</span>
+            <span class="meta-chip reward">◈ Difusión orgánica</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Diseñar estrategia Close Friends en IG</li>
+            <li><span class="step-dot"></span>Crear contenido fácilmente compartible</li>
+            <li><span class="step-dot"></span>Publicar testimonios y resultados reales</li>
+            <li><span class="step-dot"></span>Incentivar difusión con beneficio referido</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-005</div>
+            <div class="priority-badge high">ALTA</div>
+          </div>
+          <div class="mission-title">Pack Audiovisual para Músicos</div>
+          <div class="mission-desc">Sesión de grabación con infraestructura del estudio. Precio lanzamiento $60.000. Material demostrativo para campañas del sector musical.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Producción + Audio</span>
+            <span class="meta-chip reward">◈ $60.000 por sesión</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Preparar setup: fondo blanco + iluminación + micros</li>
+            <li><span class="step-dot"></span>Definir flujo multicámara y edición</li>
+            <li><span class="step-dot"></span>Contactar amigos músicos y bandas cercanas</li>
+            <li><span class="step-dot"></span>Producir contenido demo para futuras campañas</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-006</div>
+            <div class="priority-badge mid">MEDIA</div>
+          </div>
+          <div class="mission-title">Programa de Referidos</div>
+          <div class="mission-desc">Activar la red existente como canal de adquisición de bajo costo. Clientes satisfechos como embajadores de Bolsillo.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Comercial</span>
+            <span class="meta-chip reward">◈ Bajo CAC</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Contactar clientes satisfechos activamente</li>
+            <li><span class="step-dot"></span>Crear material promocional fácil de reenviar</li>
+            <li><span class="step-dot"></span>Usar stories e historias para incentivar referencias</li>
+            <li><span class="step-dot"></span>Definir incentivo concreto por referido cerrado</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ LÍNEA 3 ══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-num">L3</div>
+      <div class="section-name">CONVERSIÓN: VENTA FRÍA → VENTA TIBIA</div>
+      <div class="section-tag">Escalamiento</div>
+    </div>
+
+    <div class="card-full" style="margin-bottom:12px;">
+      <div style="padding:16px 18px;">
+        <div class="strategy-label" style="margin-bottom:10px;">▸ Proceso Comercial de Escalamiento</div>
+        <div class="escalation-row">
+          <span class="esc-num">01</span><span class="esc-arrow">→</span><span class="esc-text">Venta inicial económica — producto de entrada sin fricción</span>
+        </div>
+        <div class="escalation-row">
+          <span class="esc-num">02</span><span class="esc-arrow">→</span><span class="esc-text">Generación de confianza mediante entrega impecable</span>
+        </div>
+        <div class="escalation-row">
+          <span class="esc-num">03</span><span class="esc-arrow">→</span><span class="esc-text">Seguimiento posterior al proyecto</span>
+        </div>
+        <div class="escalation-row">
+          <span class="esc-num">04</span><span class="esc-arrow">→</span><span class="esc-text">Identificación de necesidades adicionales del cliente</span>
+        </div>
+        <div class="escalation-row">
+          <span class="esc-num">05</span><span class="esc-arrow">→</span><span class="esc-text" style="color:var(--accent-teal);">Venta de servicios de mayor valor: Producción AV · Marketing · Web · RRSS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="missions-grid">
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-007</div>
+            <div class="priority-badge mid">MEDIA</div>
+          </div>
+          <div class="mission-title">Protocolo de Seguimiento Post-Venta</div>
+          <div class="mission-desc">Sistematizar el contacto después de cada entrega para abrir puertas a servicios de mayor valor.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Comercial + Producción</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Confirmar recepción del material entregado</li>
+            <li><span class="step-dot"></span>Solicitar feedback a los 3 días</li>
+            <li><span class="step-dot"></span>Identificar próxima necesidad del cliente</li>
+            <li><span class="step-dot"></span>Presentar propuesta de siguiente nivel</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-008</div>
+            <div class="priority-badge low">BAJA</div>
+          </div>
+          <div class="mission-title">Desarrollo de Oferta de Servicios Premium</div>
+          <div class="mission-desc">Preparar propuestas listas para upselling: producción audiovisual, marketing digital, gestión de redes, desarrollo web.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Dirección</span>
+            <span class="meta-chip reward">◈ Mayor ticket</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Crear brief tipo para cada servicio premium</span></li>
+            <li><span class="step-dot"></span>Definir precios y condiciones de cada paquete</li>
+            <li><span class="step-dot"></span>Preparar casos de éxito para validar</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LÍNEA 4 ══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-num">L4</div>
+      <div class="section-name">INFRAESTRUCTURA COMERCIAL</div>
+      <div class="section-tag">Confianza</div>
+    </div>
+    <div class="missions-grid">
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-009</div>
+            <div class="priority-badge high">ALTA</div>
+          </div>
+          <div class="mission-title">Landing Promocional bolsillo.cl/promo</div>
+          <div class="mission-desc">Página de aterrizaje simple y profesional para campañas. Reduce fricción y refuerza percepción de seriedad al cierre.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Web / Desarrollo</span>
+            <span class="meta-chip reward">◈ Tasa de cierre ↑</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Definir copy y estructura de la landing</li>
+            <li><span class="step-dot"></span>Diseñar con identidad de Bolsillo</li>
+            <li><span class="step-dot"></span>Incluir formulario de contacto + WhatsApp</li>
+            <li><span class="step-dot"></span>Publicar en bolsillo.cl/promo</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-010</div>
+            <div class="priority-badge high">ALTA</div>
+          </div>
+          <div class="mission-title">Sistema de Seguimiento de Estado</div>
+          <div class="mission-desc">Comunicar activamente el avance de cada proyecto: recepción, edición y entrega. Construye confianza y reduce ansiedad del cliente.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Producción</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Crear plantillas de mensajes por etapa</li>
+            <li><span class="step-dot"></span>Confirmar recepción dentro de 2 horas</li>
+            <li><span class="step-dot"></span>Notificar inicio de edición</li>
+            <li><span class="step-dot"></span>Confirmar entrega con instrucciones de acceso</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mission-card fade-in">
+        <div class="mission-card-inner">
+          <div class="mission-head">
+            <div class="mission-id">MSN-011</div>
+            <div class="priority-badge mid">MEDIA</div>
+          </div>
+          <div class="mission-title">Portafolio y Prueba Social Actualizada</div>
+          <div class="mission-desc">Mantener activo el portafolio, casos anteriores y testimonios reales. Las redes sociales como extensión coherente de la marca.</div>
+          <div class="mission-meta">
+            <span class="meta-chip assignee">⚔ Community / RRSS</span>
+          </div>
+          <ul class="mission-steps">
+            <li><span class="step-dot"></span>Seleccionar 5 casos más sólidos para portafolio</li>
+            <li><span class="step-dot"></span>Solicitar testimonios escritos a clientes clave</li>
+            <li><span class="step-dot"></span>Publicar contenido coherente mínimo 3x/semana</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ LÍNEA 5 — TARGETS ══ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-num">L5</div>
+      <div class="section-name">OBJETIVOS COMERCIALES IDENTIFICADOS</div>
+      <div class="section-tag">Radar</div>
+    </div>
+
+    <table class="opps-table">
+      <thead>
+        <tr>
+          <th>Target</th>
+          <th>Categoría</th>
+          <th>Probabilidad</th>
+          <th>Próxima Acción</th>
+          <th>Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="target-name">Patata</span></td>
+          <td><span class="priority-badge high" style="display:inline-block;">ALTA</span></td>
+          <td>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar"><div class="prob-bar-fill" style="width:85%"></div></div>
+              <span class="prob-pct">85%</span>
+            </div>
+          </td>
+          <td style="color:var(--text-label);font-size:12px;">Agendar reunión esta semana</td>
+          <td><span class="meta-chip assignee" style="display:inline-flex;">⚔ Comercial</span></td>
+        </tr>
+        <tr>
+          <td><span class="target-name">Puente Café</span></td>
+          <td><span class="priority-badge high" style="display:inline-block;">ALTA</span></td>
+          <td>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar"><div class="prob-bar-fill" style="width:80%"></div></div>
+              <span class="prob-pct">80%</span>
+            </div>
+          </td>
+          <td style="color:var(--text-label);font-size:12px;">Llevar propuesta Reel Express</td>
+          <td><span class="meta-chip assignee" style="display:inline-flex;">⚔ Comercial</span></td>
+        </tr>
+        <tr>
+          <td><span class="target-name">Clientes BTV</span></td>
+          <td><span class="priority-badge high" style="display:inline-block;">ALTA</span></td>
+          <td>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar"><div class="prob-bar-fill" style="width:75%"></div></div>
+              <span class="prob-pct">75%</span>
+            </div>
+          </td>
+          <td style="color:var(--text-label);font-size:12px;">Reactivar con pack entrada</td>
+          <td><span class="meta-chip assignee" style="display:inline-flex;">⚔ CRM</span></td>
+        </tr>
+        <tr>
+          <td><span class="target-name">Negocios del Barrio</span></td>
+          <td><span class="priority-badge high" style="display:inline-block;">ALTA</span></td>
+          <td>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar"><div class="prob-bar-fill" style="width:70%"></div></div>
+              <span class="prob-pct">70%</span>
+            </div>
+          </td>
+          <td style="color:var(--text-label);font-size:12px;">Salida a terreno — visita directa</td>
+          <td><span class="meta-chip assignee" style="display:inline-flex;">⚔ Terreno</span></td>
+        </tr>
+        <tr>
+          <td><span class="target-name">Terrenos del Sur</span></td>
+          <td><span class="priority-badge mid" style="display:inline-block;">MEDIA</span></td>
+          <td>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar"><div class="prob-bar-fill" style="width:45%;background:var(--accent-gold);box-shadow:var(--glow-gold);"></div></div>
+              <span class="prob-pct" style="color:var(--accent-gold);">45%</span>
+            </div>
+          </td>
+          <td style="color:var(--text-label);font-size:12px;">Enviar propuesta + seguimiento</td>
+          <td><span class="meta-chip assignee" style="display:inline-flex;">⚔ Comercial</span></td>
+        </tr>
+        <tr>
+          <td><span class="target-name">Rino</span></td>
+          <td><span class="priority-badge mid" style="display:inline-block;">MEDIA</span></td>
+          <td>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar"><div class="prob-bar-fill" style="width:40%;background:var(--accent-gold);box-shadow:var(--glow-gold);"></div></div>
+              <span class="prob-pct" style="color:var(--accent-gold);">40%</span>
+            </div>
+          </td>
+          <td style="color:var(--text-label);font-size:12px;">Contacto inicial + presentación</td>
+          <td><span class="meta-chip assignee" style="display:inline-flex;">⚔ Comercial</span></td>
+        </tr>
+        <tr>
+          <td><span class="target-name">Referidos de Clientes</span></td>
+          <td><span class="priority-badge mid" style="display:inline-block;">MEDIA</span></td>
+          <td>
+            <div class="prob-bar-wrap">
+              <div class="prob-bar"><div class="prob-bar-fill" style="width:55%;background:var(--accent-gold);box-shadow:var(--glow-gold);"></div></div>
+              <span class="prob-pct" style="color:var(--accent-gold);">55%</span>
+            </div>
+          </td>
+          <td style="color:var(--text-label);font-size:12px;">Activar programa referidos</td>
+          <td><span class="meta-chip assignee" style="display:inline-flex;">⚔ Comunidad</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="conclusion">
+    <div class="conclusion-title">▸ DIRECTIVA ESTRATÉGICA ◂</div>
+    <div class="conclusion-text">
+      Todas las iniciativas responden a un único objetivo: transformar recursos subutilizados en ingresos inmediatos. Gestionar por fuente de ingreso, no por proyecto aislado. Concentrar esfuerzos, simplificar la ejecución y acelerar el retorno.
+    </div>
+    <div class="conclusion-divider"></div>
+  </div>
+
+</div><!-- /app -->
+</body>
+</html>
