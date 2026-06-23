@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaña Close Friends — Bolsillo Fotografía</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/EBkck9H.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;700&family=Montserrat:wght@500;600;700&family=Inter:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;1,9..40,200&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --bg:      #050506;
+  --surface: rgba(255,255,255,.04);
+  --glass:   rgba(255,255,255,.07);
+  --glass2:  rgba(255,255,255,.12);
+  --border:  rgba(255,255,255,.10);
+  --border2: rgba(255,255,255,.18);
+  --white:   #F8F8F8;
+  --mid:     rgba(255,255,255,.5);
+  --muted:   rgba(255,255,255,.28);
+  --green:   #4ade80;
+  --green-dim: rgba(74,222,128,.15);
+  --green-border: rgba(74,222,128,.35);
+  --amber:   #fbbf24;
+  --amber-dim: rgba(251,191,36,.12);
+  --amber-border: rgba(251,191,36,.3);
+  --font-h:  'Unbounded', sans-serif;
+  --font-t:  'Montserrat', sans-serif;
+  --font-b:  'Inter', 'DM Sans', sans-serif;
+  --r:       14px;
+  --r2:      20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-b);
+  font-size: 16px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* Galaxy canvas */
+#galaxy {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 30%, rgba(255,255,255,.03) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 80% 70%, rgba(255,255,255,.025) 0%, transparent 55%);
+}
+nav, header, section, footer, .strip { position: relative; z-index: 2; }
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 2.5rem;
+  transition: all .4s ease;
+}
+nav.scrolled {
+  background: rgba(5,5,6,.82);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--font-h);
+  font-size: .75rem;
+  font-weight: 400;
+  letter-spacing: .18em;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.nav-badge {
+  font-family: var(--font-h);
+  font-size: .5rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--green);
+  background: var(--green-dim);
+  border: 1px solid var(--green-border);
+  border-radius: 20px;
+  padding: .18rem .7rem;
+}
+.nav-links {
+  display: flex; gap: 2.2rem;
+  list-style: none;
+  font-size: .68rem;
+  font-weight: 300;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.nav-links a { color: var(--mid); transition: color .25s; }
+.nav-links a:hover { color: var(--white); }
+@media(max-width:700px){
+  .nav-links { display: none; }
+  nav { padding: 1rem 1.4rem; }
+}
+
+/* ═══════════════════════════════════════
+   TICKER
+═══════════════════════════════════════ */
+.strip {
+  overflow: hidden;
+  padding: .7rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,.02);
+  display: flex;
+}
+.strip-track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  white-space: nowrap;
+  animation: ticker 28s linear infinite;
+}
+.strip-track span {
+  font-family: var(--font-h);
+  font-size: .6rem;
+  font-weight: 300;
+  letter-spacing: .22em;
+  color: var(--muted);
+  padding: 0 1.6rem;
+}
+.strip-track .dot { padding: 0; opacity: .3; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+header {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 4rem;
+}
+.hero-eyebrow {
+  font-family: var(--font-h);
+  font-size: .58rem;
+  font-weight: 300;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.4rem;
+}
+.hero-title {
+  font-family: var(--font-h);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  line-height: .95;
+  letter-spacing: -.01em;
+  margin-bottom: .6rem;
+}
+.hero-title .italic {
+  font-weight: 200;
+  font-style: italic;
+  display: block;
+  font-size: clamp(1.2rem, 3vw, 2.4rem);
+  color: var(--mid);
+  letter-spacing: .04em;
+  margin-top: .5rem;
+}
+.hero-sub {
+  font-size: .88rem;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: .06em;
+  margin: 1.8rem 0 2.8rem;
+  line-height: 1.9;
+  max-width: 500px;
+}
+.hero-pills {
+  display: flex;
+  gap: .8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+.pill {
+  font-family: var(--font-h);
+  font-size: .52rem;
+  font-weight: 400;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .35rem .9rem;
+  border-radius: 40px;
+  background: var(--glass);
+  border: 1px solid var(--border2);
+  color: var(--mid);
+  backdrop-filter: blur(12px);
+}
+.pill.green {
+  background: var(--green-dim);
+  border-color: var(--green-border);
+  color: var(--green);
+}
+.hero-scroll {
+  font-family: var(--font-h);
+  font-size: .52rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+  margin-top: 1rem;
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+.hero-scroll::after {
+  content: '';
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--muted), transparent);
+}
+@keyframes scrollBounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ═══════════════════════════════════════
+   SECTIONS BASE
+═══════════════════════════════════════ */
+section { padding: 5rem 0; }
+.container { max-width: 1060px; margin: 0 auto; padding: 0 2rem; }
+.section-label {
+  font-family: var(--font-h);
+  font-size: .55rem;
+  font-weight: 300;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .8rem;
+}
+.section-title {
+  font-family: var(--font-h);
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  margin-bottom: .8rem;
+}
+.section-desc {
+  font-size: .93rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.58);
+  max-width: 540px;
+  line-height: 1.9;
+  margin-bottom: 2.8rem;
+}
+.divider {
+  width: 28px; height: 1px;
+  background: rgba(255,255,255,.28);
+  margin: .9rem 0 1.8rem;
+}
+
+/* ═══════════════════════════════════════
+   GLASS CARD
+═══════════════════════════════════════ */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r2);
+}
+.glass-sm {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+
+/* ═══════════════════════════════════════
+   STRATEGY OVERVIEW
+═══════════════════════════════════════ */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border-radius: var(--r2);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+.overview-cell {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  padding: 2rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.ov-num {
+  font-family: var(--font-h);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1;
+}
+.ov-label {
+  font-size: .68rem;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.ov-sub {
+  font-size: .78rem;
+  color: rgba(255,255,255,.45);
+  line-height: 1.6;
+  margin-top: .3rem;
+}
+@media(max-width:700px){
+  .overview-grid { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   ALERT BOX
+═══════════════════════════════════════ */
+.alert {
+  border-radius: var(--r);
+  padding: 1.2rem 1.5rem;
+  font-size: .84rem;
+  font-weight: 300;
+  line-height: 1.8;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+}
+.alert-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: .1rem;
+}
+.alert.green {
+  background: var(--green-dim);
+  border: 1px solid var(--green-border);
+  color: rgba(110,212,110,.9);
+}
+.alert.amber {
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-border);
+  color: rgba(251,191,36,.85);
+}
+.alert strong { color: var(--white); }
+
+/* ═══════════════════════════════════════
+   TIMELINE / DAYS
+═══════════════════════════════════════ */
+#timeline { padding: 5rem 0 6rem; }
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+.timeline-list::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--border2) 8%, var(--border2) 92%, transparent);
+}
+.tl-item {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 0 1.8rem;
+  padding-bottom: 2.8rem;
+  position: relative;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-dot {
+  width: 46px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: .1rem;
+  position: relative;
+  z-index: 2;
+}
+.tl-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--glass2);
+  border: 1px solid var(--border2);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-h);
+  font-size: .55rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--mid);
+  flex-shrink: 0;
+}
+.tl-circle.active {
+  background: var(--green-dim);
+  border-color: var(--green-border);
+  color: var(--green);
+}
+.tl-circle.key {
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.4);
+  color: var(--white);
+}
+.tl-body { padding-top: .35rem; }
+.tl-phase {
+  font-family: var(--font-h);
+  font-size: .5rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .35rem;
+}
+.tl-phase.green { color: var(--green); }
+.tl-title {
+  font-family: var(--font-h);
+  font-size: .92rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: var(--white);
+  margin-bottom: .6rem;
+  line-height: 1.2;
+}
+.tl-desc {
+  font-size: .84rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.58);
+  line-height: 1.85;
+  margin-bottom: .9rem;
+}
+.tl-why {
+  font-size: .78rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.38);
+  line-height: 1.8;
+  padding: .7rem 1rem;
+  border-left: 2px solid var(--border2);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+.tl-why strong { color: rgba(255,255,255,.65); font-style: normal; }
+.tl-actions {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.tl-action {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  font-size: .82rem;
+  color: rgba(255,255,255,.65);
+  line-height: 1.65;
+}
+.tl-action::before {
+  content: '—';
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: .05rem;
+  font-family: var(--font-h);
+  font-size: .7rem;
+}
+.tl-action strong { color: var(--white); }
+.tl-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1rem 1.2rem;
+  margin-top: 1rem;
+  backdrop-filter: blur(16px);
+}
+.tl-card-label {
+  font-family: var(--font-h);
+  font-size: .5rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+.tl-card-text {
+  font-size: .82rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.75);
+  line-height: 1.75;
+  font-style: italic;
+}
+.tl-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  font-family: var(--font-h);
+  font-size: .46rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .22rem .7rem;
+  border-radius: 20px;
+  margin-right: .4rem;
+  margin-bottom: .4rem;
+}
+.tl-tag.green { background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
+.tl-tag.white { background: rgba(255,255,255,.08); border: 1px solid var(--border2); color: var(--mid); }
+.tl-tag.amber { background: var(--amber-dim); border: 1px solid var(--amber-border); color: var(--amber); }
+.tl-tags { margin-top: .8rem; display: flex; flex-wrap: wrap; }
+
+/* ═══════════════════════════════════════
+   FUNNEL SECTION
+═══════════════════════════════════════ */
+#funnel { background: transparent; padding-top: 2rem; }
+.funnel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+@media(max-width:700px){ .funnel-grid { grid-template-columns: 1fr; } }
+.funnel-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 1.8rem 1.6rem;
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.funnel-card.featured {
+  border-color: rgba(255,255,255,.28);
+  background: var(--glass2);
+}
+.fc-num {
+  font-family: var(--font-h);
+  font-size: .5rem;
+  letter-spacing: .18em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.fc-title {
+  font-family: var(--font-h);
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.15;
+}
+.fc-desc {
+  font-size: .82rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.55);
+  line-height: 1.85;
+}
+.fc-example {
+  font-size: .78rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.38);
+  line-height: 1.75;
+  padding: .7rem .9rem;
+  border-left: 2px solid var(--border2);
+  font-style: italic;
+  margin-top: .2rem;
+}
+.fc-example strong { color: rgba(255,255,255,.6); font-style: normal; }
+
+/* ═══════════════════════════════════════
+   COPY TEMPLATES
+═══════════════════════════════════════ */
+#copies { padding: 4rem 0 5rem; }
+.copy-list { display: flex; flex-direction: column; gap: 1.2rem; }
+.copy-card {
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+}
+.copy-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  gap: 1rem;
+}
+.copy-head-left { display: flex; flex-direction: column; gap: .2rem; }
+.copy-moment {
+  font-family: var(--font-h);
+  font-size: .5rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.copy-name {
+  font-family: var(--font-h);
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--white);
+}
+.copy-tag {
+  font-family: var(--font-h);
+  font-size: .46rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .2rem .65rem;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.copy-tag.biz { background: var(--glass2); border: 1px solid var(--border2); color: var(--mid); }
+.copy-tag.personal { background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
+.copy-tag.cf { background: rgba(147,51,234,.15); border: 1px solid rgba(147,51,234,.3); color: #c084fc; }
+.copy-body { padding: 1.2rem 1.4rem; }
+.copy-text {
+  font-size: .85rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.75);
+  line-height: 1.85;
+  white-space: pre-line;
+}
+.copy-note {
+  font-size: .72rem;
+  color: var(--muted);
+  margin-top: .9rem;
+  line-height: 1.7;
+  padding-top: .9rem;
+  border-top: 1px solid var(--border);
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════
+   WARNINGS
+═══════════════════════════════════════ */
+#warnings { padding: 4rem 0; }
+.warning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media(max-width:700px){ .warning-grid { grid-template-columns: 1fr; } }
+.warning-card {
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--r);
+  padding: 1.4rem 1.5rem;
+  display: flex;
+  gap: .9rem;
+  align-items: flex-start;
+}
+.w-icon { font-size: 1.1rem; flex-shrink: 0; }
+.w-title {
+  font-family: var(--font-h);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--amber);
+  margin-bottom: .3rem;
+}
+.w-desc {
+  font-size: .8rem;
+  font-weight: 300;
+  color: rgba(251,191,36,.75);
+  line-height: 1.75;
+}
+
+/* ═══════════════════════════════════════
+   CHECKLIST
+═══════════════════════════════════════ */
+#checklist { padding: 4rem 0 6rem; }
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+@media(max-width:900px){ .check-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:600px){ .check-grid { grid-template-columns: 1fr; } }
+.check-col {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 1.6rem 1.4rem;
+  backdrop-filter: blur(16px);
+}
+.check-col-title {
+  font-family: var(--font-h);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 1.2rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--border);
+}
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  margin-bottom: .75rem;
+  font-size: .8rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.62);
+  line-height: 1.6;
+}
+.check-item::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255,255,255,.2);
+  margin-top: .18rem;
+  flex-shrink: 0;
+}
+.check-item strong { color: var(--white); }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.footer-logo {
+  font-family: var(--font-h);
+  font-size: .72rem;
+  font-weight: 300;
+  letter-spacing: .22em;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+.footer-sub {
+  font-size: .72rem;
+  color: rgba(255,255,255,.2);
+  letter-spacing: .06em;
+}
+
+/* ═══════════════════════════════════════
+   REVEAL ANIMATIONS
+═══════════════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.in { opacity: 1; transform: none; }
+.slide-left { opacity: 0; transform: translateX(-20px); transition: opacity .6s ease, transform .6s ease; }
+.slide-left.in { opacity: 1; transform: none; }
+.slide-up { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+.slide-up.in { opacity: 1; transform: none; }
+
+/* ═══════════════════════════════════════
+   LOGIN OVERLAY
+═══════════════════════════════════════ */
+#login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+#login-overlay.hidden { display: none; }
+.login-box {
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border2);
+  border-radius: var(--r2);
+  padding: 2.8rem 2.4rem 2.4rem;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-logo {
+  font-family: var(--font-h);
+  font-size: .72rem;
+  font-weight: 400;
+  letter-spacing: .22em;
+  color: var(--white);
+  margin-bottom: .5rem;
+}
+.login-badge {
+  font-family: var(--font-h);
+  font-size: .46rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--green);
+  background: var(--green-dim);
+  border: 1px solid var(--green-border);
+  border-radius: 20px;
+  padding: .18rem .7rem;
+  margin-bottom: 2rem;
+}
+.login-title {
+  font-family: var(--font-h);
+  font-size: .88rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--white);
+  margin-bottom: .4rem;
+  text-align: center;
+}
+.login-sub {
+  font-size: .76rem;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.65;
+}
+.login-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  margin-bottom: 1rem;
+}
+.login-label {
+  font-family: var(--font-h);
+  font-size: .5rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.login-input {
+  width: 100%;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: .75rem 1rem;
+  color: var(--white);
+  font-family: var(--font-b);
+  font-size: .88rem;
+  outline: none;
+  transition: border-color .2s, background .2s;
+}
+.login-input:focus { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.09); }
+.login-input.error { border-color: rgba(251,100,100,.5); }
+.login-error {
+  font-size: .72rem;
+  color: rgba(251,100,100,.85);
+  text-align: center;
+  min-height: 1rem;
+  margin-bottom: .6rem;
+}
+.login-btn {
+  width: 100%;
+  padding: .85rem 1rem;
+  background: rgba(255,255,255,.92);
+  color: #0a0a0b;
+  border: none;
+  border-radius: 40px;
+  font-family: var(--font-h);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+  margin-top: .6rem;
+}
+.login-btn:hover { background: #fff; transform: translateY(-1px); }
+.login-btn:active { transform: none; }
+
+/* Pulse dot */
+.live-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  position: relative;
+  margin-right: .5rem;
+  vertical-align: middle;
+}
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(74,222,128,.45);
+  animation: pulse 1.8s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { transform: scale(.7); opacity: .9; }
+  70%  { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(.7); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">BOLSILLO</div>
+    <div class="login-badge">Documento interno</div>
+    <div class="login-title">Acceso restringido</div>
+    <div class="login-sub">Esta página es solo para el equipo.<br>Ingresá tus credenciales para continuar.</div>
+    <div class="login-field">
+      <label class="login-label" for="l-user">Usuario</label>
+      <input class="login-input" id="l-user" type="text" placeholder="Usuario" autocomplete="username" spellcheck="false">
+    </div>
+    <div class="login-field">
+      <label class="login-label" for="l-pass">Contraseña</label>
+      <input class="login-input" id="l-pass" type="password" placeholder="Contraseña" autocomplete="current-password">
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <button class="login-btn" onclick="doLogin()">Entrar →</button>
+  </div>
+</div>
+
+<canvas id="galaxy"></canvas>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="7" width="20" height="17" rx="3" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.75)" stroke-width="1.1" stroke-linejoin="round"/>
+      <path d="M5 12.5 L23 12.5" stroke="rgba(255,255,255,.75)" stroke-width="1.1"/>
+      <path d="M11 15.5 L14 18 L17 15.5" stroke="rgba(255,255,255,.55)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    BOLSILLO
+    <span class="nav-badge">Campaña Interna</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#timeline">Días</a></li>
+    <li><a href="#funnel">Funnel</a></li>
+    <li><a href="#copies">Copies</a></li>
+    <li><a href="#warnings">Cuidados</a></li>
+    <li><a href="#checklist">Checklist</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header>
+  <p class="hero-eyebrow slide-left">Documento interno — Equipo Bolsillo</p>
+  <h1 class="hero-title slide-left">
+    CAMPAÑA
+    <span class="italic">close friends</span>
+  </h1>
+  <p class="hero-sub reveal">
+    Estrategia de 14 días para llenar la semana con sesiones express,
+    usando Close Friends y los perfiles personales del equipo como canal de difusión.
+  </p>
+  <div class="hero-pills reveal">
+    <span class="pill green"><span class="live-dot"></span>Activa ahora</span>
+    <span class="pill">14 días</span>
+    <span class="pill">6 personas</span>
+    <span class="pill">~6.000 seguidores alcanzables</span>
+  </div>
+  <div class="hero-scroll reveal">scroll</div>
+</header>
+
+<!-- TICKER -->
+<div class="strip" aria-hidden="true">
+  <div class="strip-track">
+    <span>CLOSE FRIENDS</span><span class="dot">·</span>
+    <span>RETRATOS EN ESTUDIO</span><span class="dot">·</span>
+    <span>FUNNEL PERSONAL → EMPRESA</span><span class="dot">·</span>
+    <span>CUPOS LIMITADOS</span><span class="dot">·</span>
+    <span>URGENCIA REAL</span><span class="dot">·</span>
+    <span>COLLAB POSTS</span><span class="dot">·</span>
+    <span>14 DÍAS</span><span class="dot">·</span>
+  </div>
+  <div class="strip-track" aria-hidden="true">
+    <span>CLOSE FRIENDS</span><span class="dot">·</span>
+    <span>RETRATOS EN ESTUDIO</span><span class="dot">·</span>
+    <span>FUNNEL PERSONAL → EMPRESA</span><span class="dot">·</span>
+    <span>CUPOS LIMITADOS</span><span class="dot">·</span>
+    <span>URGENCIA REAL</span><span class="dot">·</span>
+    <span>COLLAB POSTS</span><span class="dot">·</span>
+    <span>14 DÍAS</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="container">
+    <p class="section-label slide-left reveal">¿Por qué esto funciona?</p>
+    <h2 class="section-title slide-left reveal">El plan en tres números</h2>
+    <div class="divider reveal"></div>
+
+    <div class="alert green reveal">
+      <span class="alert-icon">✦</span>
+      <div><strong>Por qué Close Friends:</strong> A diferencia de los descuentos públicos, CF crea la percepción de exclusividad. La persona siente que está recibiendo algo que nadie más ve. Ese privilegio percibido aumenta la conversión, especialmente para sesiones de precio bajo a medio como Retratos Económico o Studio.</div>
+    </div>
+    <div class="alert amber reveal">
+      <span class="alert-icon">⚠</span>
+      <div><strong>Lo más importante antes de empezar:</strong> define el pack CF-exclusivo, bloquea los cupos en tu calendario, y crea el Calendly antes de que salga el primer story. Si la gente reacciona y no hay dónde reservar, perdiste el momento.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="container">
+    <p class="section-label slide-left reveal">Paso a paso</p>
+    <h2 class="section-title slide-left reveal">Los 14 días, día por día</h2>
+    <div class="divider reveal"></div>
+    <p class="section-desc reveal">Cada acción tiene una razón. Aquí está el porqué de cada paso, para que el equipo pueda ejecutar sin dudas.</p>
+
+    <div class="timeline-list">
+
+      <!-- DÍA 0 -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle key">D0</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase">Antes de publicar nada</div>
+          <div class="tl-title">Setup — la base de todo</div>
+          <div class="tl-desc">No sale ningún story hasta que esto esté listo. El error más común en campañas de Instagram es lanzar antes de tener el back-end armado: gente que reacciona, no sabe dónde reservar, se enfría y no vuelve.</div>
+          <div class="tl-why">
+            <strong>¿Por qué es crítico?</strong> Instagram te da una ventana de 24–48 horas de alta atención después de una story. Si en ese momento no hay Calendly, no hay precio claro, o el pack no está definido, ese momentum se pierde y no vuelve.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><strong>Pack CF-exclusivo:</strong> elige uno solo. Sugerencia: Retratos Económico a $20.000 (antes $25k) o Studio a $45.000 (antes $50k). Un solo precio, un solo CTA.</div>
+            <div class="tl-action"><strong>Cupos reales:</strong> cuenta los slots disponibles de la semana y escribe el número. Ej: "8 cupos". Ese número va a aparecer en el story.</div>
+            <div class="tl-action"><strong>Calendly CF:</strong> crea un evento específico llamado "Sesión CF Express" o similar. Ponle las fechas disponibles correctas. Guarda el link.</div>
+            <div class="tl-action"><strong>Contenido preparado:</strong> deja listos al menos 3 posts para CF antes de agregar a nadie. No improvises dentro de la campaña.</div>
+            <div class="tl-action"><strong>Coordinación del equipo:</strong> define qué persona del equipo postea en qué día. Nadie debe publicar sin coordinar.</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag white">📋 Setup</span>
+            <span class="tl-tag white">📅 Calendly</span>
+            <span class="tl-tag amber">⚠ No omitir</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 1 -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle active">D1</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase green">Lanzamiento</div>
+          <div class="tl-title">Story de invitación pública — cuenta @bolsillo</div>
+          <div class="tl-desc">La cuenta de negocio publica el primer story público (visible para todos sus seguidores). No revelar aún el precio ni el pack. El objetivo aquí es capturar reacciones, no vender todavía.</div>
+          <div class="tl-why">
+            <strong>¿Por qué no revelar el precio aún?</strong> Si muestras el precio en el story de invitación, la gente evalúa si le conviene antes de interactuar. Al mantenerlo oculto, bajas la fricción de la reacción: el costo de reaccionar con ⭐ es casi cero, y después el precio se revela solo a quienes ya están dentro.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action">Story visual con foto del estudio o retrato reciente. Tiene que verse bien.</div>
+            <div class="tl-action">Texto: <em>"Esta semana tengo cupos express con precio especial — solo para mis close friends 📲 Reaccioná con ⭐ si querés que te agregue"</em></div>
+            <div class="tl-action">Un solo emoji de acción (⭐). No pedir que compartan, no pedir que sigan. Una sola cosa.</div>
+            <div class="tl-action">Procesar las reacciones cada 2–3 horas durante el día y agregar a CF.</div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-card-label">Story pública — @bolsillo</div>
+            <div class="tl-card-text">"Esta semana abro cupos express con precio especial 📸 — exclusivo para mi lista de close friends. Si querés entrar, reaccioná con ⭐ a este story y te agrego 💚"</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag white">📱 Story pública</span>
+            <span class="tl-tag white">@bolsillo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 1–2 (EQUIPO) -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle">D1–2</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase">Amplificación — cuentas personales</div>
+          <div class="tl-title">2 personas del equipo postean en sus cuentas personales</div>
+          <div class="tl-desc">Dos integrantes del equipo publican en sus perfiles personales durante el día 1 y día 2. No el mismo día ni la misma hora: queremos que se vea como eco orgánico, no como campaña coordinada.</div>
+          <div class="tl-why">
+            <strong>¿Por qué personal y no repost?</strong> Un repost de la cuenta de negocio en la cuenta personal se ve como propaganda. Una story personal que muestra vida real del estudio y menciona a @bolsillo se ve como contexto auténtico. La diferencia en engagement es enorme.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action">Story personal: foto candid del estudio, setup de luces, o momento de trabajo. No foto de marketing.</div>
+            <div class="tl-action">Tagear @bolsillo de forma natural: <em>"vengan a vernos acá 👉 @bolsillo.fotografia"</em></div>
+            <div class="tl-action">Pueden mencionar la campaña CF de forma suelta: <em>"esta semana hay promo solo para los CF del estudio"</em> — sin detalles.</div>
+            <div class="tl-action">No copiar la misma frase entre las personas. Cada uno en su propio tono.</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag green">👤 Cuentas personales</span>
+            <span class="tl-tag white">BTS / candid</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 2 -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle active">D2</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase green">Revelación</div>
+          <div class="tl-title">Primer post CF — la oferta al descubierto</div>
+          <div class="tl-desc">Solo para quienes están en Close Friends. Este es el post más importante de toda la campaña. Tiene que tener precio, pack, número de cupos, y un link directo a Calendly.</div>
+          <div class="tl-why">
+            <strong>¿Por qué no revelar antes?</strong> Porque el tiempo entre la reacción (día 1) y la revelación (día 2) genera anticipación. La persona ya hizo algo (reaccionar), así que tiene pequeño compromiso psicológico con lo que viene. Eso aumenta la tasa de apertura del story de CF.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><strong>Pack:</strong> nombre, precio CF vs precio normal, qué incluye (conciso: 3 puntos máximo).</div>
+            <div class="tl-action"><strong>Cupos:</strong> "Solo X cupos esta semana." Número real.</div>
+            <div class="tl-action"><strong>CTA:</strong> link a Calendly en el story o "Respondé este story para reservar".</div>
+            <div class="tl-action"><strong>Urgencia:</strong> "Oferta válida solo hasta el [fecha]."</div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-card-label">Story CF — solo close friends 💚</div>
+            <div class="tl-card-text">"Ya están adentro 💚 Esta semana tengo 8 cupos de sesión express en el estudio, solo para ustedes.
+
+Pack: Retratos Studio
+Precio CF: $45.000 (precio normal $50k)
+✓ 1 hora de sesión
+✓ 15 fotos editadas
+✓ Galería digital privada
+
+Reservá directo acá 👇 [link Calendly]
+Cupos limitados — primero en llegar, primero en elegir fecha."</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag" style="background:rgba(147,51,234,.15);border:1px solid rgba(147,51,234,.3);color:#c084fc;">💜 Solo CF</span>
+            <span class="tl-tag white">@bolsillo</span>
+            <span class="tl-tag green">CTA directo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍA 3 -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle">D3</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase">Collab — mayor alcance</div>
+          <div class="tl-title">Reel collab entre cuenta personal y @bolsillo</div>
+          <div class="tl-desc">El integrante del equipo con mayor engagement en su cuenta personal publica un Reel usando la función Collab de Instagram, coautorado con @bolsillo. Aparece simultáneamente en ambos feeds.</div>
+          <div class="tl-why">
+            <strong>¿Por qué collab y no etiqueta?</strong> Un tag te menciona. Un collab publica el contenido en el feed del otro perfil directamente. Los seguidores del perfil personal lo ven como contenido de ese perfil, con la credibilidad que eso implica, pero también descubren @bolsillo en el proceso.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action">Reel de 20–30 segundos: BTS de una sesión, un resultado de retrato, o una vista del estudio. Sin música con copyright.</div>
+            <div class="tl-action">Caption mencionando la campaña CF de forma natural, sin sonar a venta.</div>
+            <div class="tl-action">Tagear @bolsillo.fotografia en el post además del collab.</div>
+            <div class="tl-action">Horario ideal: 12:00–13:00 o 20:00–21:00 (mayor actividad de la audiencia en Chile).</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag green">🎬 Reel Collab</span>
+            <span class="tl-tag white">Mayor alcance</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍAS 4–9 -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle">D4–9</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase">Temperatura alta</div>
+          <div class="tl-title">Mantener el CF vivo — posts cada 2–3 días</div>
+          <div class="tl-desc">La mayoría de las campañas muere acá porque el equipo se cansa de publicar. Pero para quien está en CF, si el silencio dura más de 3 días, el list se "enfría" y los posts siguientes tienen mucho menos impacto. Hay que mantener temperatura.</div>
+          <div class="tl-why">
+            <strong>¿Qué publicar sin quemarse?</strong> No todo tiene que ser promo. La mezcla ideal es: 1 post de promo (cupos restantes, urgencia) + 1 post de contenido (resultado de sesión de esa semana, BTS, testimonio rápido de alguien que ya vino). Eso mantiene la atención sin cansar.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><strong>Post cupos restantes:</strong> cada 2 días, actualizar en CF cuántos cupos quedan. "Quedan 5 cupos." Simple. Funciona.</div>
+            <div class="tl-action"><strong>Post de resultado:</strong> foto del trabajo de esa semana (con permiso). "Así quedó la sesión de hoy 🖤" — sin precio, sin CTA agresivo.</div>
+            <div class="tl-action"><strong>Reel personal del equipo:</strong> días 5 y 8, dos personas distintas del equipo postean en sus cuentas personales con tag a @bolsillo.</div>
+            <div class="tl-action"><strong>Regla de oro:</strong> nunca dos personas del equipo publican el mismo día sobre lo mismo. Coordinar en grupo.</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag" style="background:rgba(147,51,234,.15);border:1px solid rgba(147,51,234,.3);color:#c084fc;">💜 CF posts</span>
+            <span class="tl-tag green">👤 Personales</span>
+            <span class="tl-tag white">BTS · Resultados</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍAS 10–12 -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle">D10–12</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase">Urgencia final</div>
+          <div class="tl-title">Counter de cupos — cierre se acerca</div>
+          <div class="tl-desc">Es el momento donde los indecisos se activan. La urgencia de "quedan 2 cupos" convierte a quienes habían visto el post del día 2 pero no reservaron. No es presión artificial: si los cupos se van llenando, este contador es real.</div>
+          <div class="tl-why">
+            <strong>¿Por qué funciona el contador al final y no al principio?</strong> Al principio hay curiosidad. Al final hay FOMO (miedo a quedarse afuera). Son motivadores distintos. El FOMO es más poderoso para la acción inmediata, por eso se activa en los últimos días.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action">Story CF: "Quedan X cupos — la campaña cierra el [fecha]."</div>
+            <div class="tl-action">Si quedan pocos cupos: mencionarlo explícitamente. No inventar escasez si no es real, pero sí comunicarla si lo es.</div>
+            <div class="tl-action">Una persona del equipo postea story personal diciendo que ella también agendó (si aplica) o que está viendo llegar gente al estudio.</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag amber">⏳ Urgencia</span>
+            <span class="tl-tag" style="background:rgba(147,51,234,.15);border:1px solid rgba(147,51,234,.3);color:#c084fc;">💜 CF</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DÍAS 13–14 -->
+      <div class="tl-item reveal">
+        <div class="tl-dot">
+          <div class="tl-circle key">D14</div>
+        </div>
+        <div class="tl-body">
+          <div class="tl-phase">Cierre</div>
+          <div class="tl-title">Último cupo — y el wrap-up público</div>
+          <div class="tl-desc">Último post en CF con cierre real de la campaña. Después, un post público (no CF) de wrap-up: sin precios, solo resultados y vibe. Esto construye el FOMO para la próxima campaña CF.</div>
+          <div class="tl-why">
+            <strong>¿Por qué el wrap-up público?</strong> Porque la gente que no estaba en CF ve el resumen de lo que se perdió. Eso es lo que hace que la próxima invitación a CF tenga mucho más demanda. La primera campaña siembra la segunda.
+          </div>
+          <div class="tl-actions">
+            <div class="tl-action"><strong>Story CF:</strong> "Último día — cierra hoy. Si tenés un cupo reservado, te contactamos mañana para confirmar."</div>
+            <div class="tl-action"><strong>Post público @bolsillo:</strong> carrusel o Reel con los mejores resultados de la semana. Sin mencionar precios. Caption simple: "Esta semana 🖤".</div>
+            <div class="tl-action"><strong>Stories personales del equipo:</strong> 2–3 personas comparten el post público con su propia reacción.</div>
+          </div>
+          <div class="tl-tags">
+            <span class="tl-tag green">✓ Cierre</span>
+            <span class="tl-tag white">📢 Wrap público</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FUNNEL -->
+<section id="funnel">
+  <div class="container">
+    <p class="section-label slide-left reveal">Cuentas personales → negocio</p>
+    <h2 class="section-title slide-left reveal">Cómo usar el equipo como canal</h2>
+    <div class="divider reveal"></div>
+    <p class="section-desc reveal">6 personas × ~1.000 seguidores = 6.000 audiencias tibias que ya confían en alguien del equipo. Esta es la ventaja que ningún estudio de la competencia puede comprar con pauta.</p>
+
+    <div class="funnel-grid reveal">
+      <div class="funnel-card featured">
+        <div class="fc-num">01 — Mayor impacto</div>
+        <div class="fc-title">Collab post con la cuenta de negocio</div>
+        <div class="fc-desc">La función Collab de Instagram publica el mismo contenido simultáneamente en el feed personal y en @bolsillo. Los seguidores del perfil personal lo ven como contenido de esa persona, pero también descubren la cuenta de negocio.</div>
+        <div class="fc-example"><strong>Cómo activarlo:</strong> al crear un post o Reel, antes de publicar ir a "Etiquetar personas" → "Invitar a colaborador" → @bolsillo.fotografia. La cuenta de negocio acepta y el post aparece en ambos feeds.</div>
+      </div>
+      <div class="funnel-card">
+        <div class="fc-num">02 — Más natural</div>
+        <div class="fc-title">Story personal con tag orgánico</div>
+        <div class="fc-desc">Cualquier story del equipo mostrando vida real del estudio: setup de luces, una sesión en progreso, el espacio, una broma del día. Al final, un tag sutil a @bolsillo. No suena a publicidad porque no lo es.</div>
+        <div class="fc-example"><strong>Lo que no hay que hacer:</strong> repostear la story de @bolsillo desde la cuenta personal. Eso sí suena a propaganda y baja el engagement de la cuenta personal también.</div>
+      </div>
+      <div class="funnel-card">
+        <div class="fc-num">03 — Reframing del seguimiento</div>
+        <div class="fc-title">"¿Querés salir en mi feed?"</div>
+        <div class="fc-desc">Cada integrante puede publicar una story personal diciendo que está haciendo sesiones en el estudio y que si alguien quiere una foto para su perfil, puede agendar en @bolsillo. Reencuadra seguir la cuenta como un beneficio personal, no un favor.</div>
+        <div class="fc-example"><strong>Copy de ejemplo:</strong> "Esta semana estoy disparando sesiones en el estudio — si querés una foto tuya para tu perfil, entrá a @bolsillo.fotografia y agendá 🖤"</div>
+      </div>
+      <div class="funnel-card">
+        <div class="fc-num">04 — Timing escalonado</div>
+        <div class="fc-title">Publicaciones distribuidas en el tiempo</div>
+        <div class="fc-desc">Nunca las 6 personas publican el mismo día sobre lo mismo. Se distribuye a lo largo de los 14 días: 2 personas en días 1–2, 2 en días 5–6, 2 en días 9–10. Cada vez llega a un grupo fresco y parece eco espontáneo, no campaña armada.</div>
+        <div class="fc-example"><strong>Efecto buscado:</strong> que distintos seguidores de distintas personas del equipo lleguen a @bolsillo en momentos distintos, evitando el pico único que luego se olvida.</div>
+      </div>
+    </div>
+
+    <div class="alert amber reveal">
+      <span class="alert-icon">⚠</span>
+      <div><strong>Regla de equilibrio:</strong> por cada mención a @bolsillo en un perfil personal, debe haber 3–4 posts de contenido genuinamente personal antes. Si la audiencia percibe que la cuenta se volvió un canal publicitario, el engagement cae y el efecto funnel se pierde para siempre.</div>
+    </div>
+  </div>
+</section>
+
+<!-- COPIES -->
+<section id="copies">
+  <div class="container">
+    <p class="section-label slide-left reveal">Textos listos para usar</p>
+    <h2 class="section-title slide-left reveal">Copies de la campaña</h2>
+    <div class="divider reveal"></div>
+    <p class="section-desc reveal">Adaptar según el tono natural de cada uno. Nunca copiar exactamente el mismo texto entre dos personas del equipo.</p>
+
+    <div class="copy-list">
+
+      <div class="copy-card reveal">
+        <div class="copy-head">
+          <div class="copy-head-left">
+            <div class="copy-moment">Día 1 — Story pública</div>
+            <div class="copy-name">Invitación al CF</div>
+          </div>
+          <span class="copy-tag biz">@bolsillo</span>
+        </div>
+        <div class="copy-body">
+          <div class="copy-text">Esta semana abro cupos express con precio especial 📸
+
+Solo para mi lista de close friends.
+
+Si querés entrar, reaccioná con ⭐ a este story y te agrego 💚</div>
+          <div class="copy-note">Mantener minimalista. Sin precio, sin detalles del pack. El objetivo aquí es solo capturar la reacción — la venta viene después.</div>
+        </div>
+      </div>
+
+      <div class="copy-card reveal">
+        <div class="copy-head">
+          <div class="copy-head-left">
+            <div class="copy-moment">Día 2 — Story CF</div>
+            <div class="copy-name">Revelación de la oferta</div>
+          </div>
+          <span class="copy-tag cf">Solo CF 💜</span>
+        </div>
+        <div class="copy-body">
+          <div class="copy-text">Ya están adentro 💚 Gracias por confiar.
+
+Esta semana tengo [X] cupos de sesión express, solo para ustedes.
+
+📸 PACK: Retratos Studio CF
+💰 Precio CF: $45.000 (precio normal: $50k)
+✓ 1 hora de sesión en el estudio
+✓ 15 fotos editadas
+✓ Galería digital privada, alta resolución
+
+👉 Reservá directo acá: [LINK CALENDLY]
+
+Cupos limitados — primero en llegar, primero en elegir fecha.
+Campaña válida hasta el [FECHA].</div>
+          <div class="copy-note">Reemplazar [X], [LINK CALENDLY] y [FECHA] antes de publicar. El precio CF tiene que ser distinto al precio del sitio web — si es igual, no hay razón para haber entrado al CF.</div>
+        </div>
+      </div>
+
+      <div class="copy-card reveal">
+        <div class="copy-head">
+          <div class="copy-head-left">
+            <div class="copy-moment">Días 1–2 — Story personal</div>
+            <div class="copy-name">Story del equipo (cuenta personal)</div>
+          </div>
+          <span class="copy-tag personal">👤 Personal</span>
+        </div>
+        <div class="copy-body">
+          <div class="copy-text">Día normal en el estudio 🖤 [foto candid del estudio o de una sesión]
+
+Si les llama la atención lo que hacemos, sígannosacá 👉 @bolsillo.fotografia
+
+Esta semana hay algo especial en el CF 🤫</div>
+          <div class="copy-note">Adaptar en el tono personal de cada quien. Esta versión es solo una referencia. La última línea genera intriga sin revelar nada — útil para que sus seguidores vayan a @bolsillo a ver qué hay.</div>
+        </div>
+      </div>
+
+      <div class="copy-card reveal">
+        <div class="copy-head">
+          <div class="copy-head-left">
+            <div class="copy-moment">Días 4–9 — Actualización CF</div>
+            <div class="copy-name">Counter de cupos (post repetible)</div>
+          </div>
+          <span class="copy-tag cf">Solo CF 💜</span>
+        </div>
+        <div class="copy-body">
+          <div class="copy-text">Actualización rápida 📊
+
+✅ Cupos tomados: [N]
+⏳ Cupos restantes: [N]
+📅 Cierre: [FECHA]
+
+Si todavía no reservaste, el link sigue acá 👉 [LINK CALENDLY]</div>
+          <div class="copy-note">Simple y directo. No hace falta texto largo. Este post cumple una sola función: recordar que los cupos se están acabando. Publicar cada 2–3 días, actualizando los números reales.</div>
+        </div>
+      </div>
+
+      <div class="copy-card reveal">
+        <div class="copy-head">
+          <div class="copy-head-left">
+            <div class="copy-moment">Día 3 — Caption Reel Collab</div>
+            <div class="copy-name">Collab cuenta personal + @bolsillo</div>
+          </div>
+          <span class="copy-tag personal">👤 + @bolsillo</span>
+        </div>
+        <div class="copy-body">
+          <div class="copy-text">Esto es lo que pasa cuando le prestás atención a la luz 🖤
+
+Semana movida en el estudio — me encanta este trabajo.
+
+Si querés una sesión, este es el lugar: @bolsillo.fotografia 📸</div>
+          <div class="copy-note">Caption para el Reel Collab. Tiene que sonar como el autor del perfil personal, no como comunicación de marca. Que @bolsillo aparezca como referencia natural, no como cliente pagado.</div>
+        </div>
+      </div>
+
+      <div class="copy-card reveal">
+        <div class="copy-head">
+          <div class="copy-head-left">
+            <div class="copy-moment">Día 14 — Post público</div>
+            <div class="copy-name">Wrap-up de la campaña (visible para todos)</div>
+          </div>
+          <span class="copy-tag biz">@bolsillo — público</span>
+        </div>
+        <div class="copy-body">
+          <div class="copy-text">Esta semana 🖤
+
+[foto o carrusel de los mejores resultados]
+
+Gracias a cada persona que confió en el estudio. Hasta la próxima.</div>
+          <div class="copy-note">Sin precios, sin mencionar el CF. Solo resultados y calidad. Este post es el que genera FOMO en quienes no estuvieron — y es la semilla de la próxima campaña CF, que va a tener más demanda.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WARNINGS -->
+<section id="warnings">
+  <div class="container">
+    <p class="section-label slide-left reveal">Lo que puede salir mal</p>
+    <h2 class="section-title slide-left reveal">Puntos de cuidado</h2>
+    <div class="divider reveal"></div>
+    <div class="warning-grid reveal">
+
+      <div class="warning-card">
+        <div class="w-icon">⚠</div>
+        <div>
+          <div class="w-title">Lanzar sin el Calendly listo</div>
+          <div class="w-desc">Si la gente reacciona al story y no hay dónde reservar, pierdes el momento. La ventana de alta intención dura 24–48 horas. Tener el link antes de publicar es innegociable.</div>
+        </div>
+      </div>
+
+      <div class="warning-card">
+        <div class="w-icon">⚠</div>
+        <div>
+          <div class="w-title">Precio CF igual al precio del sitio</div>
+          <div class="w-desc">Si el descuento no es real, la exclusividad se rompe. La oferta CF tiene que ser genuinamente mejor que lo que está en bolsillo.fotografia, o nadie va a tomarlo en serio la próxima vez.</div>
+        </div>
+      </div>
+
+      <div class="warning-card">
+        <div class="w-icon">⚠</div>
+        <div>
+          <div class="w-title">Todo el equipo publica el mismo día</div>
+          <div class="w-desc">Parece campaña armada, no eco orgánico. Además el algoritmo puede penalizar contenido coordinado que referencia a la misma cuenta. Escalonar al menos con 24 horas entre personas.</div>
+        </div>
+      </div>
+
+      <div class="warning-card">
+        <div class="w-icon">⚠</div>
+        <div>
+          <div class="w-title">Dejar el CF sin posts más de 3 días</div>
+          <div class="w-desc">La lista se enfría y los posts siguientes tienen menos apertura. Si no hay contenido real, publicar algo simple: un behind the scenes, un resultado, una actualización de cupos.</div>
+        </div>
+      </div>
+
+      <div class="warning-card">
+        <div class="w-icon">⚠</div>
+        <div>
+          <div class="w-title">Agregar sin confirmar el anticipo</div>
+          <div class="w-desc">Las reservas "express" tienen mayor riesgo de no-show. Asegurar que el flujo de Calendly lleve siempre al 50% de anticipo antes de confirmar la fecha. Sin anticipo, no hay cupo bloqueado.</div>
+        </div>
+      </div>
+
+      <div class="warning-card">
+        <div class="w-icon">⚠</div>
+        <div>
+          <div class="w-title">Cuentas personales como canal publicitario</div>
+          <div class="w-desc">Si la audiencia personal siente que el perfil se convirtió en publicidad del estudio, cae el engagement personal y se pierde la confianza. Máximo 1 mención por cada 3–4 posts personales genuinos.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<section id="checklist">
+  <div class="container">
+    <p class="section-label slide-left reveal">Pre-lanzamiento</p>
+    <h2 class="section-title slide-left reveal">Checklist del equipo</h2>
+    <div class="divider reveal"></div>
+    <p class="section-desc reveal">Marcar cada ítem antes del primer story. Si algo falta, no publicar.</p>
+
+    <div class="check-grid reveal">
+
+      <div class="check-col">
+        <div class="check-col-title">🗂 Setup (Día 0)</div>
+        <div class="check-item"><strong>Pack CF definido</strong> — nombre, precio normal, precio CF, qué incluye</div>
+        <div class="check-item"><strong>Número de cupos</strong> — real, basado en disponibilidad de la semana</div>
+        <div class="check-item"><strong>Calendly CF creado</strong> — evento separado con fechas disponibles correctas</div>
+        <div class="check-item"><strong>Link de Calendly</strong> copiado y probado desde el celular</div>
+        <div class="check-item"><strong>3 posts CF preparados</strong> antes de empezar a agregar gente</div>
+      </div>
+
+      <div class="check-col">
+        <div class="check-col-title">📱 Lanzamiento (Día 1–2)</div>
+        <div class="check-item"><strong>Story de invitación</strong> publicada en @bolsillo — solo con emoji ⭐</div>
+        <div class="check-item"><strong>Reacciones procesadas</strong> cada 2–3 horas durante el día 1</div>
+        <div class="check-item"><strong>Story CF revelación</strong> publicada en día 2 — precio, cupos, link Calendly</div>
+        <div class="check-item"><strong>2 personas del equipo</strong> publican stories personales con tag @bolsillo</div>
+        <div class="check-item"><strong>Reel collab</strong> publicado en día 3 — persona con mayor engagement + @bolsillo</div>
+      </div>
+
+      <div class="check-col">
+        <div class="check-col-title">✅ Reglas del equipo</div>
+        <div class="check-item"><strong>Nadie publica lo mismo</strong> que otra persona del equipo el mismo día</div>
+        <div class="check-item"><strong>Copias de stories no son iguales</strong> — adaptar al tono personal de cada uno</div>
+        <div class="check-item"><strong>Sin precios en cuentas personales</strong> — solo el CTA a @bolsillo</div>
+        <div class="check-item"><strong>CF no queda sin post más de 3 días</strong> durante los 14 días</div>
+        <div class="check-item"><strong>Anticipo confirmado</strong> antes de bloquear fecha en Calendly</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BOLSILLO FOTOGRAFÍA</div>
+  <div class="footer-sub">Documento interno — Campaña Close Friends · 14 días · Solo para el equipo</div>
+</footer>
+
+<script>
+/* ── Login ── */
+function doLogin() {
+  var u = document.getElementById("l-user").value.trim();
+  var p = document.getElementById("l-pass").value;
+  var err = document.getElementById("login-error");
+  var ui = document.getElementById("l-user");
+  var pi = document.getElementById("l-pass");
+  if (u === "Palomo" && p === "Palomos17") {
+    document.getElementById("login-overlay").classList.add("hidden");
+    err.textContent = "";
+    ui.classList.remove("error"); pi.classList.remove("error");
+  } else {
+    err.textContent = "Usuario o contraseña incorrectos.";
+    ui.classList.add("error"); pi.classList.add("error");
+    pi.value = "";
+    pi.focus();
+  }
+}
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !document.getElementById("login-overlay").classList.contains("hidden")) doLogin();
+});
+/* ── Galaxy canvas ── */
+(function() {
+  const canvas = document.getElementById('galaxy');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], animId, blobs = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    blobs = [
+      { x: W*.18, y: H*.28, r: Math.min(W,H)*.38, a: .022 },
+      { x: W*.82, y: H*.65, r: Math.min(W,H)*.32, a: .018 },
+      { x: W*.5,  y: H*.5,  r: Math.min(W,H)*.25, a: .012 },
+    ];
+  }
+
+  function Particle() {
+    this.reset = function() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.r = Math.random() * 1.1 + .1;
+      this.alpha = Math.random() * .6 + .05;
+      this.speed = Math.random() * .12 + .02;
+      this.twinkle = Math.random() * Math.PI * 2;
+      this.twinkleSpeed = Math.random() * .008 + .002;
+      this.drift = (Math.random() - .5) * .06;
+    };
+    this.reset();
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    const count = Math.min(Math.floor(W * H / 3500), 340);
+    for (let i = 0; i < count; i++) particles.push(new Particle());
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    blobs.forEach(b => {
+      const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+      g.addColorStop(0, `rgba(255,255,255,${b.a})`);
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    particles.forEach(p => {
+      p.twinkle += p.twinkleSpeed;
+      p.y -= p.speed;
+      p.x += p.drift;
+      if (p.y < -2) { p.y = H + 2; p.x = Math.random() * W; }
+      if (p.x < -2 || p.x > W + 2) p.reset();
+      const a = p.alpha * (.5 + .5 * Math.sin(p.twinkle));
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.fill();
+      if (p.r > .9 && Math.sin(p.twinkle) > .85) {
+        ctx.strokeStyle = `rgba(255,255,255,${a * .4})`;
+        ctx.lineWidth = .4;
+        ctx.beginPath();
+        ctx.moveTo(p.x - p.r * 2.5, p.y); ctx.lineTo(p.x + p.r * 2.5, p.y);
+        ctx.moveTo(p.x, p.y - p.r * 2.5); ctx.lineTo(p.x, p.y + p.r * 2.5);
+        ctx.stroke();
+      }
+    });
+    animId = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { cancelAnimationFrame(animId); init(); draw(); });
+  init(); draw();
+})();
+
+/* ── Nav scroll ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ── Reveal animations ── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      revealObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.07 });
+
+document.querySelectorAll('.reveal, .slide-left, .slide-up').forEach(el => revealObs.observe(el));
+
+/* Hero elements animate on load */
+window.addEventListener('DOMContentLoaded', () => {
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('header .slide-left, header .reveal, header .slide-up').forEach((el, i) => {
+        setTimeout(() => el.classList.add('in'), i * 120);
+      });
+    }, 200);
+  });
+});
+</script>
+</body>
+</html>
